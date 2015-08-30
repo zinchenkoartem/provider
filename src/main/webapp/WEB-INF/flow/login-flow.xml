@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+      start-state="register" >
+
+
+
+    <var name="con_request" class="com.miniprovider.entity.ConRequestBean"/>
+    <on-start>
+        <evaluate expression="addressDaoImpl.all" result="flowScope.adr_list"/>
+    </on-start>
+
+    <view-state id="register" view="registration_start" model="con_request">
+        <transition on="submit" to="actionAddRequest" />
+        <transition on="to_main_page" to="to_main_page" />
+    </view-state>
+
+    <view-state id="to_main_page" view="index"/>
+
+    <action-state id="actionAddRequest">
+        <evaluate expression="flowConRequestUtil.addRequest(con_request)"/>
+        <transition on="added" to="registration_end"/>
+    </action-state>
+
+    <view-state id="registration_end" view="registration_end">
+        <transition on="to_main_page" to="cancel" />
+    </view-state>
+
+    <end-state id="cancel" view="index"/>
+</flow>
